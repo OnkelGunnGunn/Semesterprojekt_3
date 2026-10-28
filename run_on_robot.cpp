@@ -17,8 +17,8 @@
 #include <unistd.h>
 
 // Change this line when the Pi gets a new address.
-const char *sshID = "pi@172.20.10.5";
-const char *LocalFile = "rb3_node_cpp.cpp";
+const char *sshID = "pi@172.20.10.4";
+const char *LocalFile = "tests/50cm_accurate_test.cpp";
 const char *remoteFile = "/home/pi/code_ws/src/rb3_package_cpp/src/rb3_node_cpp.cpp";
 // A socket file on your PC. The first ssh keeps the login open here, so the later scp and ssh reuse it and do not ask for the password again.
 const char *kSocket = "/tmp/tb3-run-on-robot.sock";
@@ -43,7 +43,7 @@ const char *kRemoteScript = R"REMOTE(
 
   echo "Building rb3_package_cpp..."
   cd /home/pi/code_ws
-  colcon build --symlink-install --packages-select rb3_package_cpp
+  #colcon build --symlink-install --packages-select rb3_package_cpp
   source /home/pi/code_ws/install/setup.bash
 
   # Background jobs get their own process group, so cleanup can stop the launch
@@ -185,13 +185,13 @@ void stop_robot() {
 }
 
 int main() {
-  std::ifstream source(LocalFile);
-  if (!source) {
-    std::cerr << "Could not open " << LocalFile
-              << ". Run this program from the SemesterProject folder.\n";
-    return 1;
-  }
-  source.close();
+  // std::ifstream source(LocalFile);
+  // if (!source) {
+  //   std::cerr << "Could not open " << LocalFile
+  //             << ". Run this program from the SemesterProject folder.\n";
+  //   return 1;
+  // }
+  // source.close();
 
   struct sigaction action = {};
   action.sa_handler = on_stop;
@@ -210,16 +210,16 @@ int main() {
     return login;
   }
 
-  std::cout << "Copying " << LocalFile << "\n";
-  const int copied = run_process(
-      {"scp", "-o", std::string("ControlPath=") + kSocket, LocalFile,
-       std::string(sshID) + ":" + remoteFile},
-      nullptr, false);
-  if (copied != 0) {
-    std::cerr << "Copy failed.\n";
-    close_login();
-    return copied;
-  }
+  // std::cout << "Copying " << LocalFile << "\n";
+  // const int copied = run_process(
+  //     {"scp", "-o", std::string("ControlPath=") + kSocket, LocalFile,
+  //      std::string(sshID) + ":" + remoteFile},
+  //     nullptr, false);
+  // if (copied != 0) {
+  //   std::cerr << "Copy failed.\n";
+  //   close_login();
+  //   return copied;
+  // }
 
   // No -tt here. With -tt, ssh switches the local terminal to raw mode and Ctrl+C
   // is not delivered as a signal, so this program never gets a chance to stop the Pi.
