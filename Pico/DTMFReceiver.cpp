@@ -37,6 +37,41 @@ namespace
     };
 }
 
+// Constructor
+DTMFReceiver::DTMFReceiver()
+{
+    sequenceLength = 0;
+    receivedSequence[0] = '\0';
+}
+
+// Tilføjer et tegn til sekvensen
+void DTMFReceiver::addToSequence(char key)
+{
+    // Kontroller at der er plads
+    if (sequenceLength < MAX_SEQUENCE_LENGTH - 1)
+    {
+        receivedSequence[sequenceLength] = key;
+
+        sequenceLength++;
+
+        // Afslut string
+        receivedSequence[sequenceLength] = '\0';
+    }
+}
+
+// Returnerer hele sekvensen
+const char* DTMFReceiver::getReceivedSequence() const
+{
+    return receivedSequence;
+}
+
+// Nulstiller sekvensen
+void DTMFReceiver::clearSequence()
+{
+    sequenceLength = 0;
+    receivedSequence[0] = '\0';
+}
+
 // -------------------------
 // Initialisering
 // -------------------------
@@ -261,7 +296,7 @@ char DTMFReceiver::readKey()
     if (key == candidateKey)
     {
         candidateCount++;
-    }
+    }  
     else
     {
         candidateKey = key;
@@ -270,10 +305,14 @@ char DTMFReceiver::readKey()
 
     // Kræv to sammenhængende målinger
     if (candidateCount >= 2 && key != previousKey)
-    {
-        previousKey = key;
-        return key;
-    }
+{
+    previousKey = key;
+
+    // Gem den nye tone i sekvensen
+    addToSequence(key);
+
+    return key;
+}
 
     return '\0';
 }

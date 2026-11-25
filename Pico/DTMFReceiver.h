@@ -8,6 +8,8 @@ class DTMFReceiver
 {
 public:
 
+    DTMFReceiver();
+
     // Initialiserer SPI og MCP3002
     void begin();
 
@@ -16,7 +18,20 @@ public:
     // Returnerer '\0', hvis ingen ny tast er registreret.
     char readKey();
 
+    // Henter hele den modtagne sekvens
+    const char* getReceivedSequence() const;
+
+    // Nulstiller sekvensen
+    void clearSequence();
+
 private:
+
+    static constexpr int MAX_SEQUENCE_LENGTH = 32;
+
+    char receivedSequence[MAX_SEQUENCE_LENGTH];
+    int sequenceLength;
+
+    void addToSequence(char key);
 
     // MCP3002
     uint16_t readMCP3002();
