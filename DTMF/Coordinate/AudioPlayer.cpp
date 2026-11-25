@@ -55,14 +55,18 @@ void AudioPlayer::playTone(int lowFreq, int highFreq)
 
     Pa_WriteStream(stream, signal.data(), N);
 }
+
+
 void AudioPlayer::playSequence(const std::string& data, const DTMFEncoder& encoder)
 {
     for (char c : data)
     {
         auto frequencies = encoder.getFrequency(c);
 
+        std::cout << "Playing key: " << c << std::endl;
+
         playTone(frequencies.first, frequencies.second);
 
-        Pa_Sleep(150);
+        Pa_Sleep(250);
     }
 }

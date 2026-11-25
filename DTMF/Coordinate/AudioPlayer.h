@@ -18,7 +18,6 @@ private:
 public:
     AudioPlayer();
     ~AudioPlayer();
-
     void initialize();
     void playTone(int lowFreq, int highFreq);
     void playSequence(const std::string& data, const DTMFEncoder& encoder);
