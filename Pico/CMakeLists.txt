@@ -35,7 +35,11 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(Pico DTMF_mic.cpp )
+add_executable(Pico 
+main.cpp
+DTMFReceiver.cpp
+FrequencyMeter.cpp
+ )
 
 pico_set_program_name(Pico "Pico")
 pico_set_program_version(Pico "0.1")
@@ -49,6 +53,7 @@ target_link_libraries(Pico
         pico_stdlib
         hardware_pwm
         hardware_adc
+        hardware_spi
         m)
         
 
